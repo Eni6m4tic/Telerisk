@@ -12,12 +12,12 @@ def tracking_error(message_error):
     with open("./logs/error.log", 'a') as file1:
         file1.write(message_error + "\n")
 
-def collect_leak(domain,user_id,time):
-    _cmd = f'rg -t txt --byte-offset --binary --text -iI "{domain}" -A 2'
+def collect_leak(domain, user_id, time):
+    _cmd = ["rg", "-t", "txt", "--byte-offset", "--binary", "--text", "-iI", domain, "-A", "2"]
     try:
         _results = subprocess.run(
             _cmd,
-            shell=True,
+            shell=False,
             capture_output=True,
             text=True,
             timeout=1
@@ -25,6 +25,8 @@ def collect_leak(domain,user_id,time):
         return _results.stdout
     except subprocess.TimeoutExpired:
         return "[!] Timeout"
+    except Exception:
+        return "[!] Error"
 
 def audit_log(user_id,username,domain,time,today):
     log = user_id + '|' + username + '|' + domain + '|' + time + '\n'
